@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#153f2e">
+  <title>Control de Predios</title>
+  <style>
+    :root {
+      --verde-900: #153f2e;
+      --verde-700: #286c4c;
+      --verde-100: #e3f2e8;
+      --fondo: #f3f6f4;
+      --blanco: #ffffff;
+      --texto: #17231c;
+      --suave: #68766d;
+      --borde: #d7e0da;
+      --rojo: #a52a2a;
+      --rojo-fondo: #fff0f0;
+      --sombra: 0 10px 26px rgba(21, 63, 46, .08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      background: var(--verde-900);
+      color: white;
+      border-bottom: 5px solid #56a56f;
+      padding: 20px 24px;
+    }
+
+    .header-inner, main { max-width: 1500px; margin: auto; }
+    h1 { margin: 0; font-size: clamp(1.45rem, 3vw, 2rem); }
+    header p { margin: 7px 0 0; color: #b9dcc5; }
+
+    main { padding: 24px; }
+
+    .updated {
+      margin-bottom: 18px;
+      color: var(--suave);
+      font-size: .92rem;
+      text-align: left;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: minmax(220px, 360px);
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .card, .table-box {
+      background: var(--blanco);
+      border: 1px solid var(--borde);
+      border-radius: 13px;
+      box-shadow: var(--sombra);
+    }
+
+    .card { padding: 20px; text-align: center; }
+    .card .number { font-size: 2.4rem; font-weight: 800; color: var(--rojo); }
+    .card .label { margin-top: 5px; color: var(--suave); font-weight: 700; }
+
+    .table-box { overflow: hidden; }
+    .table-scroll { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
+    th, td { padding: 13px 12px; border-bottom: 1px solid var(--borde); text-align: center; }
+    th { background: #e8efe9; color: var(--verde-900); font-size: .84rem; text-transform: uppercase; }
+    tbody tr { background: var(--rojo-fondo); }
+    tbody tr:hover { background: #ffe3e3; }
+    td { font-size: .93rem; }
+
+    .empty {
+      padding: 45px 20px;
+      text-align: center;
+      color: var(--suave);
+    }
+
+    .empty .check { font-size: 3rem; color: var(--verde-700); margin-bottom: 8px; }
+
+    @media (max-width: 700px) {
+      header, main { padding-left: 14px; padding-right: 14px; }
+      .summary { grid-template-columns: 1fr; }
+      .updated { text-align: left; }
+
+      .table-box {
+        padding: 10px;
+        overflow: visible;
+      }
+
+      .table-scroll { overflow: visible; }
+
+      table,
+      tbody {
+        display: block;
+        width: 100%;
+        min-width: 0;
+      }
+
+      thead { display: none; }
+
+      tbody tr {
+        display: block;
+        margin-bottom: 12px;
+        border: 1px solid #efbaba;
+        border-radius: 11px;
+        overflow: hidden;
+      }
+
+      tbody tr:last-child { margin-bottom: 0; }
+
+      tbody td {
+        display: grid;
+        grid-template-columns: 130px minmax(0, 1fr);
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 11px 12px;
+        text-align: left;
+        overflow-wrap: anywhere;
+      }
+
+      tbody td::before {
+        color: var(--verde-900);
+        font-size: .78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      tbody td:nth-child(1)::before { content: "Vehículo"; }
+      tbody td:nth-child(2)::before { content: "Remito origen"; }
+      tbody td:nth-child(3)::before { content: "Predio eRemitos"; }
+      tbody td:nth-child(4)::before { content: "Predio sistema"; }
+      tbody td:nth-child(5)::before { content: "Destino"; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1>Control de Predios</h1>
+      <p>Diferencias de ingreso de PREDIO entre eRemitos y Sistema Playa</p>
+    </div>
+  </header>
+
+  <main>
+    <div id="updated" class="updated">Cargando información…</div>
+
+    <section class="summary">
+      <article class="card">
+        <div id="total" class="number">0</div>
+        <div class="label">REGISTROS CON INCONSISTENCIAS</div>
+      </article>
+    </section>
+
+    <section class="table-box">
+      <div class="table-scroll">
+        <table id="resultsTable" hidden>
+          <thead>
+            <tr>
+              <th>Vehículo</th>
+              <th>Remito origen</th>
+              <th>Predio eRemitos</th>
+              <th>Predio sistema</th>
+              <th>Destino</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="empty"></div>
+    </section>
+  </main>
+
+  <script>
+    const JSON_URL = "https://dl.dropbox.com/scl/fi/yyv19kyh77tymn7lpzjj7/PrediosNoCoinciden.json?rlkey=b12e7chay2a7f35ii6tdoupio&dl=1";
+    const INTERVALO_ACTUALIZACION = 60000;
+
+    const table = document.getElementById("resultsTable");
+    const body = document.getElementById("tableBody");
+    const empty = document.getElementById("emptyState");
+    const total = document.getElementById("total");
+    const updated = document.getElementById("updated");
+
+    function safe(value) {
+      return value === null || value === undefined || value === "" ? "—" : String(value);
+    }
+
+    function extractRecords(json) {
+      if (Array.isArray(json)) return json;
+      if (Array.isArray(json.registros)) return json.registros;
+      if (Array.isArray(json.datos)) return json.datos;
+      if (Array.isArray(json.data)) return json.data;
+      return [];
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "—";
+
+      const match = String(value).match(
+        /^(\d{4})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})/
+      );
+
+      if (!match) return String(value);
+
+      const [, year, month, day, hour, minute] = match;
+      return `${day}/${month}/${year} ${hour}:${minute}`;
+    }
+
+    function render(records, updateText) {
+      const differences = records.filter(item => {
+        const estado = String(item.estado_control || "NO COINCIDE").toUpperCase();
+        return estado === "NO COINCIDE";
+      });
+
+      total.textContent = differences.length;
+      updated.textContent = updateText;
+      body.innerHTML = "";
+
+      if (differences.length === 0) {
+        table.hidden = true;
+        empty.hidden = false;
+        empty.innerHTML = '<div class="check">✓</div><strong>Sin diferencias de predio</strong><div>Todos los registros vinculados coinciden.</div>';
+        return;
+      }
+
+      empty.hidden = true;
+      table.hidden = false;
+
+      differences.forEach(item => {
+        const row = document.createElement("tr");
+        const values = [
+          item.vehiculo,
+          item.remito_origen,
+          item.predio_eremitos,
+          item.predio_remitos2,
+          item.destino
+        ];
+
+        values.forEach(value => {
+          const cell = document.createElement("td");
+          cell.textContent = safe(value);
+          row.appendChild(cell);
+        });
+
+        body.appendChild(row);
+      });
+    }
+
+    async function cargarDatos() {
+      try {
+        const separador = JSON_URL.includes("?") ? "&" : "?";
+        const respuesta = await fetch(
+          `${JSON_URL}${separador}_=${Date.now()}`,
+          { cache: "no-store" }
+        );
+
+        if (!respuesta.ok) {
+          throw new Error(`Dropbox respondió con estado ${respuesta.status}`);
+        }
+
+        const json = await respuesta.json();
+        const records = extractRecords(json);
+        const fecha = json.actualizado
+          ? `Actualizado: ${formatDateTime(json.actualizado)}`
+          : "Información actualizada";
+
+        render(records, fecha);
+      } catch (error) {
+        total.textContent = "—";
+        table.hidden = true;
+        empty.hidden = false;
+        empty.innerHTML = '<strong>No se pudo cargar la información</strong><div>Se intentará nuevamente de forma automática.</div>';
+        updated.textContent = "Sin conexión con los datos";
+        console.error(error);
+      }
+    }
+
+    cargarDatos();
+    setInterval(cargarDatos, INTERVALO_ACTUALIZACION);
+  </script>
+</body>
+</html>
