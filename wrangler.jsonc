@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
 
-  "name": "control-predios-inconsistencias",
+  "name": "control-ingreso-monte-sistema",
 
   "main": "src/index.js",
 
