@@ -69,6 +69,48 @@
     .card .number { font-size: 2.4rem; font-weight: 800; color: var(--rojo); }
     .card .label { margin-top: 5px; color: var(--suave); font-weight: 700; }
 
+    .review-alert {
+      justify-self: center;
+      min-width: 150px;
+      padding: 10px 24px;
+      border: 2px solid #ffd43b;
+      border-radius: 999px;
+      background: #ffd43b;
+      color: #17120a;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 1.4px;
+      text-align: center;
+      box-shadow: 0 0 16px rgba(255, 212, 59, .55);
+      animation: reviewBlink 1s steps(1, end) infinite;
+    }
+
+    .review-alert[hidden] { display: none; }
+
+    @keyframes reviewBlink {
+      0%, 49% {
+        background: #ffd43b;
+        border-color: #ffd43b;
+        color: #17120a;
+        box-shadow: 0 0 16px rgba(255, 212, 59, .55);
+      }
+      50%, 100% {
+        background: #d62828;
+        border-color: #ff6666;
+        color: #ffffff;
+        box-shadow: 0 0 20px rgba(214, 40, 40, .65);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .review-alert {
+        animation: none;
+        background: #d62828;
+        border-color: #ff6666;
+        color: #ffffff;
+      }
+    }
+
     .table-box { overflow: hidden; }
     .table-scroll { overflow-x: auto; }
 
@@ -160,6 +202,7 @@
         <div id="total" class="number">0</div>
         <div class="label">REGISTROS CON INCONSISTENCIAS</div>
       </article>
+      <div id="reviewAlert" class="review-alert" role="alert" hidden>REVISAR</div>
     </section>
 
     <section class="table-box">
@@ -190,6 +233,7 @@
     const empty = document.getElementById("emptyState");
     const total = document.getElementById("total");
     const updated = document.getElementById("updated");
+    const reviewAlert = document.getElementById("reviewAlert");
 
     function safe(value) {
       return value === null || value === undefined || value === "" ? "—" : String(value);
@@ -223,6 +267,7 @@
       });
 
       total.textContent = differences.length;
+      reviewAlert.hidden = differences.length === 0;
       updated.textContent = updateText;
       body.innerHTML = "";
 
@@ -277,6 +322,7 @@
         render(records, fecha);
       } catch (error) {
         total.textContent = "—";
+        reviewAlert.hidden = true;
         table.hidden = true;
         empty.hidden = false;
         empty.innerHTML = '<strong>No se pudo cargar la información</strong><div>Se intentará nuevamente de forma automática.</div>';
