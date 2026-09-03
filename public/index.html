@@ -182,7 +182,7 @@
   </main>
 
   <script>
-    const JSON_URL = "https://dl.dropbox.com/scl/fi/yyv19kyh77tymn7lpzjj7/PrediosNoCoinciden.json?rlkey=b12e7chay2a7f35ii6tdoupio&dl=1";
+    const JSON_URL = "/api/datos";
     const INTERVALO_ACTUALIZACION = 60000;
 
     const table = document.getElementById("resultsTable");
@@ -265,7 +265,7 @@
         );
 
         if (!respuesta.ok) {
-          throw new Error(`Dropbox respondió con estado ${respuesta.status}`);
+          throw new Error(`La fuente de datos respondió con estado ${respuesta.status}`);
         }
 
         const json = await respuesta.json();
