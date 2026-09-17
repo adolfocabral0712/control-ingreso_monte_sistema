@@ -6,6 +6,7 @@
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#153f2e">
   <title>Control de Predios</title>
+
   <style>
     :root {
       --verde-900: #153f2e;
@@ -21,7 +22,9 @@
       --sombra: 0 10px 26px rgba(21, 63, 46, .08);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -31,17 +34,31 @@
     }
 
     header {
-      background: var(--verde-900);
-      color: white;
-      border-bottom: 5px solid #56a56f;
       padding: 20px 24px;
+      color: white;
+      background: var(--verde-900);
+      border-bottom: 5px solid #56a56f;
     }
 
-    .header-inner, main { max-width: 1500px; margin: auto; }
-    h1 { margin: 0; font-size: clamp(1.45rem, 3vw, 2rem); }
-    header p { margin: 7px 0 0; color: #b9dcc5; }
+    .header-inner,
+    main {
+      max-width: 1500px;
+      margin: auto;
+    }
 
-    main { padding: 24px; }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.45rem, 3vw, 2rem);
+    }
+
+    header p {
+      margin: 7px 0 0;
+      color: #b9dcc5;
+    }
+
+    main {
+      padding: 24px;
+    }
 
     .updated {
       margin-bottom: 18px;
@@ -58,88 +75,153 @@
       margin-bottom: 18px;
     }
 
-    .card, .table-box {
+    .card,
+    .table-box {
       background: var(--blanco);
       border: 1px solid var(--borde);
       border-radius: 13px;
       box-shadow: var(--sombra);
     }
 
-    .card { padding: 20px; text-align: center; }
-    .card .number { font-size: 2.4rem; font-weight: 800; color: var(--rojo); }
-    .card .label { margin-top: 5px; color: var(--suave); font-weight: 700; }
+    .card {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .card .number {
+      color: var(--rojo);
+      font-size: 2.4rem;
+      font-weight: 800;
+    }
+
+    .card .label {
+      margin-top: 5px;
+      color: var(--suave);
+      font-weight: 700;
+    }
 
     .review-alert {
       justify-self: center;
       min-width: 150px;
       padding: 10px 24px;
-      border: 2px solid #ffd43b;
-      border-radius: 999px;
       background: #ffd43b;
       color: #17120a;
+      border: 2px solid #ffd43b;
+      border-radius: 999px;
+      box-shadow: 0 0 16px rgba(255, 212, 59, .55);
       font-size: 1rem;
       font-weight: 900;
       letter-spacing: 1.4px;
       text-align: center;
-      box-shadow: 0 0 16px rgba(255, 212, 59, .55);
       animation: reviewBlink 1s steps(1, end) infinite;
     }
 
-    .review-alert[hidden] { display: none; }
+    .review-alert[hidden] {
+      display: none;
+    }
 
     @keyframes reviewBlink {
-      0%, 49% {
+      0%,
+      49% {
         background: #ffd43b;
-        border-color: #ffd43b;
         color: #17120a;
+        border-color: #ffd43b;
         box-shadow: 0 0 16px rgba(255, 212, 59, .55);
       }
-      50%, 100% {
+
+      50%,
+      100% {
         background: #d62828;
-        border-color: #ff6666;
         color: #ffffff;
+        border-color: #ff6666;
         box-shadow: 0 0 20px rgba(214, 40, 40, .65);
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .review-alert {
-        animation: none;
         background: #d62828;
-        border-color: #ff6666;
         color: #ffffff;
+        border-color: #ff6666;
+        animation: none;
       }
     }
 
-    .table-box { overflow: hidden; }
-    .table-scroll { overflow-x: auto; }
+    .table-box {
+      overflow: hidden;
+    }
 
-    table { width: 100%; border-collapse: collapse; min-width: 760px; }
-    th, td { padding: 13px 12px; border-bottom: 1px solid var(--borde); text-align: center; }
-    th { background: #e8efe9; color: var(--verde-900); font-size: .84rem; text-transform: uppercase; }
-    tbody tr { background: var(--rojo-fondo); }
-    tbody tr:hover { background: #ffe3e3; }
-    td { font-size: .93rem; }
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 13px 12px;
+      border-bottom: 1px solid var(--borde);
+      text-align: center;
+    }
+
+    th {
+      background: #e8efe9;
+      color: var(--verde-900);
+      font-size: .84rem;
+      text-transform: uppercase;
+    }
+
+    tbody tr {
+      background: var(--rojo-fondo);
+    }
+
+    tbody tr:hover {
+      background: #ffe3e3;
+    }
+
+    td {
+      font-size: .93rem;
+    }
 
     .empty {
       padding: 45px 20px;
-      text-align: center;
       color: var(--suave);
+      text-align: center;
     }
 
-    .empty .check { font-size: 3rem; color: var(--verde-700); margin-bottom: 8px; }
+    .empty .check {
+      margin-bottom: 8px;
+      color: var(--verde-700);
+      font-size: 3rem;
+    }
 
     @media (max-width: 700px) {
-      header, main { padding-left: 14px; padding-right: 14px; }
-      .summary { grid-template-columns: 1fr; }
-      .updated { text-align: left; }
+      header,
+      main {
+        padding-right: 14px;
+        padding-left: 14px;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .updated {
+        text-align: left;
+      }
 
       .table-box {
         padding: 10px;
         overflow: visible;
       }
 
-      .table-scroll { overflow: visible; }
+      .table-scroll {
+        overflow: visible;
+      }
 
       table,
       tbody {
@@ -148,17 +230,21 @@
         min-width: 0;
       }
 
-      thead { display: none; }
+      thead {
+        display: none;
+      }
 
       tbody tr {
         display: block;
         margin-bottom: 12px;
+        overflow: hidden;
         border: 1px solid #efbaba;
         border-radius: 11px;
-        overflow: hidden;
       }
 
-      tbody tr:last-child { margin-bottom: 0; }
+      tbody tr:last-child {
+        margin-bottom: 0;
+      }
 
       tbody td {
         display: grid;
@@ -178,14 +264,29 @@
         text-transform: uppercase;
       }
 
-      tbody td:nth-child(1)::before { content: "Vehículo"; }
-      tbody td:nth-child(2)::before { content: "Remito origen"; }
-      tbody td:nth-child(3)::before { content: "Predio eRemitos"; }
-      tbody td:nth-child(4)::before { content: "Predio sistema"; }
-      tbody td:nth-child(5)::before { content: "Destino"; }
+      tbody td:nth-child(1)::before {
+        content: "Vehículo";
+      }
+
+      tbody td:nth-child(2)::before {
+        content: "Remito origen";
+      }
+
+      tbody td:nth-child(3)::before {
+        content: "Predio eRemitos";
+      }
+
+      tbody td:nth-child(4)::before {
+        content: "Predio sistema";
+      }
+
+      tbody td:nth-child(5)::before {
+        content: "Destino";
+      }
     }
   </style>
 </head>
+
 <body>
   <header>
     <div class="header-inner">
@@ -195,14 +296,24 @@
   </header>
 
   <main>
-    <div id="updated" class="updated">Cargando información…</div>
+    <div id="updated" class="updated">
+      Cargando información…
+    </div>
 
     <section class="summary">
       <article class="card">
         <div id="total" class="number">0</div>
         <div class="label">REGISTROS CON INCONSISTENCIAS</div>
       </article>
-      <div id="reviewAlert" class="review-alert" role="alert" hidden>REVISAR</div>
+
+      <div
+        id="reviewAlert"
+        class="review-alert"
+        role="alert"
+        hidden
+      >
+        REVISAR
+      </div>
     </section>
 
     <section class="table-box">
@@ -217,9 +328,11 @@
               <th>Destino</th>
             </tr>
           </thead>
+
           <tbody id="tableBody"></tbody>
         </table>
       </div>
+
       <div id="emptyState" class="empty"></div>
     </section>
   </main>
@@ -236,34 +349,74 @@
     const reviewAlert = document.getElementById("reviewAlert");
 
     function safe(value) {
-      return value === null || value === undefined || value === "" ? "—" : String(value);
+      return value === null ||
+               value === undefined ||
+        value === ""
+        ? "—"
+        : String(value);
+    }
+
+    function normalizeText(value) {
+      return String(value ?? "")
+        .trim()
+        .toUpperCase();
     }
 
     function extractRecords(json) {
-      if (Array.isArray(json)) return json;
-      if (Array.isArray(json.registros)) return json.registros;
-      if (Array.isArray(json.datos)) return json.datos;
-      if (Array.isArray(json.data)) return json.data;
+      if (Array.isArray(json)) {
+        return json;
+      }
+
+      if (Array.isArray(json.registros)) {
+        return json.registros;
+      }
+
+      if (Array.isArray(json.datos)) {
+        return json.datos;
+      }
+
+      if (Array.isArray(json.data)) {
+        return json.data;
+      }
+
       return [];
     }
 
     function formatDateTime(value) {
-      if (!value) return "—";
+      if (!value) {
+        return "—";
+      }
 
       const match = String(value).match(
         /^(\d{4})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})/
       );
 
-      if (!match) return String(value);
+      if (!match) {
+        return String(value);
+      }
 
       const [, year, month, day, hour, minute] = match;
+
       return `${day}/${month}/${year} ${hour}:${minute}`;
     }
 
     function render(records, updateText) {
       const differences = records.filter(item => {
-        const estado = String(item.estado_control || "NO COINCIDE").toUpperCase();
-        return estado === "NO COINCIDE";
+        const estado = normalizeText(
+          item.estado_control || "NO COINCIDE"
+        );
+
+        const predioSistema = normalizeText(
+          item.predio_remitos2
+        );
+
+        const esInconsistencia =
+          estado === "NO COINCIDE";
+
+        const esPredioExcluido =
+          predioSistema.includes("B3R UPM LAS ACACIAS");
+
+        return esInconsistencia && !esPredioExcluido;
       });
 
       total.textContent = differences.length;
@@ -274,7 +427,13 @@
       if (differences.length === 0) {
         table.hidden = true;
         empty.hidden = false;
-        empty.innerHTML = '<div class="check">✓</div><strong>Sin diferencias de predio</strong><div>Todos los registros vinculados coinciden.</div>';
+
+        empty.innerHTML = `
+          <div class="check">✓</div>
+          <strong>Sin diferencias de predio</strong>
+          <div>Todos los registros vinculados coinciden.</div>
+        `;
+
         return;
       }
 
@@ -283,6 +442,7 @@
 
       differences.forEach(item => {
         const row = document.createElement("tr");
+
         const values = [
           item.vehiculo,
           item.remito_origen,
@@ -304,17 +464,23 @@
     async function cargarDatos() {
       try {
         const separador = JSON_URL.includes("?") ? "&" : "?";
+
         const respuesta = await fetch(
           `${JSON_URL}${separador}_=${Date.now()}`,
-          { cache: "no-store" }
+          {
+            cache: "no-store"
+          }
         );
 
         if (!respuesta.ok) {
-          throw new Error(`La fuente de datos respondió con estado ${respuesta.status}`);
+          throw new Error(
+            `La fuente de datos respondió con estado ${respuesta.status}`
+          );
         }
 
         const json = await respuesta.json();
         const records = extractRecords(json);
+
         const fecha = json.actualizado
           ? `Actualizado: ${formatDateTime(json.actualizado)}`
           : "Información actualizada";
@@ -325,14 +491,24 @@
         reviewAlert.hidden = true;
         table.hidden = true;
         empty.hidden = false;
-        empty.innerHTML = '<strong>No se pudo cargar la información</strong><div>Se intentará nuevamente de forma automática.</div>';
+
+        empty.innerHTML = `
+          <strong>No se pudo cargar la información</strong>
+          <div>Se intentará nuevamente de forma automática.</div>
+        `;
+
         updated.textContent = "Sin conexión con los datos";
+
         console.error(error);
       }
     }
 
     cargarDatos();
-    setInterval(cargarDatos, INTERVALO_ACTUALIZACION);
+
+    setInterval(
+      cargarDatos,
+      INTERVALO_ACTUALIZACION
+    );
   </script>
 </body>
 </html>
